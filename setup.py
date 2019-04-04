@@ -80,7 +80,8 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        dataontosearch=ckanext.dataontosearch.plugin:DataontosearchPlugin
+        dataontosearch_tagging=ckanext.dataontosearch.plugin:DataOntoSearch_TaggingPlugin
+        dataontosearch_searching=ckanext.dataontosearch.plugin:DataOntoSearch_SearchingPlugin
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

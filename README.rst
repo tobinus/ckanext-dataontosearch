@@ -32,17 +32,18 @@
 ckanext-dataontosearch
 =============
 
-.. Put a description of your extension here:
-   What does it do? What features does it have?
-   Consider including some screenshots or embedding a video!
+Extension for integrating CKAN with DataOntoSearch.
+
+DataOntoSearch is a project which aims to make it easier to find datasets, by using a domain-specific ontology to find similar datasets. The software is run as a separate server, which other projects like CKAN can connect to.
+
+There are two separate plugins provided with this extension. ``dataontosearch_tagging`` provides a way of associating datasets with concepts in the ontology. ``dataontosearch_searching`` provides an integrated way of searching using DataOntoSearch.
 
 
 ------------
 Requirements
 ------------
 
-For example, you might want to mention here which versions of CKAN this
-extension works with.
+This plugin was developed for CKAN version 2.8. We have not checked what other versions it works with.
 
 
 ------------
@@ -63,11 +64,13 @@ To install ckanext-dataontosearch:
 
      pip install ckanext-dataontosearch
 
-3. Add ``dataontosearch`` to the ``ckan.plugins`` setting in your CKAN
+3. Add ``dataontosearch_tagging`` and ``dataontosearch_searching`` to the ``ckan.plugins`` setting in your CKAN
    config file (by default the config file is located at
-   ``/etc/ckan/default/production.ini``).
+   ``/etc/ckan/default/production.ini``). Both are not required, any one of them can be used alone, but that is rather uncommon.
 
-4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+4. Add required settings (TODO: Decide what settings to use!) (TODO: Try installing the plugin)
+
+5. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
      sudo service apache2 reload
 
