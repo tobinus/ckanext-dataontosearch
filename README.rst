@@ -28,9 +28,9 @@
     :target: https://pypi.python.org/pypi/ckanext-dataontosearch/
     :alt: License
 
-=============
+======================
 ckanext-dataontosearch
-=============
+======================
 
 Extension for integrating CKAN with DataOntoSearch.
 
@@ -68,7 +68,16 @@ To install ckanext-dataontosearch:
    config file (by default the config file is located at
    ``/etc/ckan/default/production.ini``). Both are not required, any one of them can be used alone, but that is rather uncommon.
 
-4. Add required settings (TODO: Decide what settings to use!) (TODO: Try installing the plugin)
+4. Add required settings: (TODO: Try installing the plugin)::
+
+     # Base URL where dataset_tagger is running
+     ckan.dataontosearch.tagger_url = https://example.com/tagger
+
+     # Base URL where the search for DataOntoSearch is running
+     ckan.dataontosearch.search_url = https://example.com/search
+
+     # The DataOntoSearch Configuration to use
+     ckan.dataontosearch.configuration = 5c7ea259c556bb42803fa17e
 
 5. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
@@ -79,11 +88,13 @@ To install ckanext-dataontosearch:
 Config Settings
 ---------------
 
-Document any optional config settings here. For example::
+The required settings are described in the installation guide. In addition to those, you may specify the login used when connecting to DataOntoSearch::
 
-    # The minimum number of hours to wait before re-checking a resource
-    # (optional, default: 24).
-    ckanext.dataontosearch.some_setting = some_default_value
+    # Username and password to use when querying and tagging datasets in
+    # DataOntoSearch (HTTP Basic Authentication)
+    # (optional, default: no credentials).
+    ckanext.dataontosearch.username = aladdin
+    ckanext.dataontosearch.password = opensesame
 
 
 ------------------------
