@@ -38,6 +38,10 @@ DataOntoSearch is a project which aims to make it easier to find datasets, by us
 
 There are two separate plugins provided with this extension. ``dataontosearch_tagging`` provides a way of associating datasets with concepts in the ontology. ``dataontosearch_searching`` provides an integrated way of searching using DataOntoSearch.
 
+The extension adds a link you can follow when editing datasets. From there, you can change what concepts are connected to what datasets.
+
+The extension also adds a link to the alternative search method. Following it lets you search using DataOntoSearch.
+
 
 ------------
 Requirements
