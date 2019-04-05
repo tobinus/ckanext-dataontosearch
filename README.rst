@@ -128,35 +128,6 @@ coverage installed in your virtualenv (``pip install coverage``) then run::
     nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.dataontosearch --cover-inclusive --cover-erase --cover-tests
 
 
----------------------------------
-Registering ckanext-dataontosearch on PyPI
----------------------------------
-
-ckanext-dataontosearch should be availabe on PyPI as
-https://pypi.python.org/pypi/ckanext-dataontosearch. If that link doesn't work, then
-you can register the project on PyPI for the first time by following these
-steps:
-
-1. Create a source distribution of the project::
-
-     python setup.py sdist
-
-2. Register the project::
-
-     python setup.py register
-
-3. Upload the source distribution to PyPI::
-
-     python setup.py sdist upload
-
-4. Tag the first release of the project on GitHub with the version number from
-   the ``setup.py`` file. For example if the version number in ``setup.py`` is
-   0.0.1 then do::
-
-       git tag 0.0.1
-       git push --tags
-
-
 ----------------------------------------
 Releasing a New Version of ckanext-dataontosearch
 ----------------------------------------
@@ -172,9 +143,9 @@ To publish a new version to PyPI follow these steps:
 
      python setup.py sdist
 
-3. Upload the source distribution to PyPI::
+3. Upload the source distribution to PyPI (assuming you have run ``pip install twine`` before)::
 
-     python setup.py sdist upload
+     twine upload dist/*
 
 4. Tag the new release of the project on GitHub with the version number from
    the ``setup.py`` file. For example if the version number in ``setup.py`` is
