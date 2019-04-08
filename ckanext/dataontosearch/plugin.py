@@ -1,5 +1,6 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import requests
 
 
 class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
@@ -40,11 +41,14 @@ def dataontosearch_concept_list(context, data_dict):
     :rtype: list of strings
     '''
     toolkit.check_access('dataontosearch_concept_list', context, data_dict)
-    # TODO: Make actual request, instead of using example data
-    return [
-        {'uri': 'http://example.com/#more-testing', 'label': 'more testing'},
-        {'uri': 'http://example.com/#yet-an-example', 'label': 'Yet another example'},
-    ]
+    r = make_tagger_get_request('/concept')
+    r.raise_for_status()
+
+    data = r.json()
+
+    return {
+        uri: {'label': label} for uri, label in data.items()
+    }
 
 
 def dataontosearch_concept_list_auth(context, data_dict):
@@ -66,6 +70,30 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'dataontosearch')
+
+
+def make_tagger_get_request(endpoint, params=None):
+    url = '{base}/api/v1/{config}{endpoint}'.format(
+        base=get_tagger_url(),
+        config=get_configuration(),
+        endpoint=endpoint,
+    )
+    return _make_generic_get_request(url, params)
+
+
+def _make_generic_get_request(url, params=None):
+    username, password = get_credentials()
+    if username is not None and password is not None:
+        auth = (username, password)
+    else:
+        auth = None
+
+    return requests.get(
+        url,
+        params,
+        timeout=29.,
+        auth=auth,
+    )
 
 
 def get_tagger_url():
