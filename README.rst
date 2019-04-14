@@ -60,19 +60,23 @@ Installation
 
 To install ckanext-dataontosearch:
 
-1. Activate your CKAN virtual environment, for example::
+1. Ensure that the ckanext-dcat_ extension is installed.
+
+.. _ckanext-dcat: https://github.com/ckan/ckanext-dcat
+
+2. Activate your CKAN virtual environment, for example::
 
      . /usr/lib/ckan/default/bin/activate
 
-2. Install the ckanext-dataontosearch Python package into your virtual environment::
+3. Install the ckanext-dataontosearch Python package into your virtual environment::
 
      pip install ckanext-dataontosearch
 
-3. Add ``dataontosearch_tagging`` and ``dataontosearch_searching`` to the ``ckan.plugins`` setting in your CKAN
+4. Add ``dataontosearch_tagging`` and ``dataontosearch_searching`` to the ``ckan.plugins`` setting in your CKAN
    config file (by default the config file is located at
-   ``/etc/ckan/default/production.ini``). Both are not required, any one of them can be used alone, but that is rather uncommon.
+   ``/etc/ckan/default/production.ini``). Both are not required, any one of them can be used alone, but that is rather uncommon. They need to be listed after the ``dcat`` plugins.
 
-4. Add required settings: (TODO: Try installing the plugin)::
+5. Add required settings:
 
      # Base URL where dataset_tagger is running
      ckan.dataontosearch.tagger_url = https://example.com/tagger
@@ -83,7 +87,7 @@ To install ckanext-dataontosearch:
      # The DataOntoSearch Configuration to use
      ckan.dataontosearch.configuration = 5c7ea259c556bb42803fa17e
 
-5. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+6. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
      sudo service apache2 reload
 

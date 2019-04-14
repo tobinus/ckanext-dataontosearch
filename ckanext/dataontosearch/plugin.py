@@ -1,5 +1,12 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+try:
+    from ckanext.dcat.utils import dataset_uri
+except ImportError:
+    raise RuntimeError(
+        'ckanext-dataontosearch is dependent on ckanext-dcat, but could not '
+        'find the latter'
+    )
 import requests
 
 
@@ -116,26 +123,19 @@ def dataontosearch_tagging_list(context, data_dict):
     '''
     toolkit.check_access('dataontosearch_tagging_list', context, data_dict)
 
-    # Get the ID of this dataset
+    # What dataset is specified?
     dataset_id_or_name = toolkit.get_or_bust(data_dict, 'id')
     dataset = toolkit.get_action('package_show')(None, {'id': dataset_id_or_name})
 
-    def get_data(dataset_id):
-        dataset_uri = toolkit.url_for('dataset.read', id=dataset_id, _external=True)
-        r = make_tagger_get_request('/tagging', {'dataset': dataset_uri})
-        r.raise_for_status()
+    # Generate the RDF URI for this dataset, using the very same code used by
+    # ckanext-dcat. We need this to be consistent with what DataOntoSearch found
+    # when it retrieved the dataset RDF, thus this use of the internal DCAT API.
+    dataset_rdf_uri = dataset_uri(dataset)
 
-        data = r.json()
-        return data
+    r = make_tagger_get_request('/tagging', {'dataset_id': dataset_rdf_uri})
+    r.raise_for_status()
 
-    # What URI is used in DataOntoSearch's RDF graph to identify this dataset?
-    # It is usually the URL where the dataset can be seen, though it varies
-    # whether the ID or name is used. Let's try the ID first.
-    data = get_data(dataset['id'])
-
-    if data is None:
-        # Not the ID, try the name
-        data = get_data(dataset['name'])
+    data = r.json()
 
     if data is None:
         return []
