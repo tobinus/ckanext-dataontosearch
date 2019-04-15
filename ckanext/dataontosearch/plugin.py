@@ -14,13 +14,16 @@ import requests
 # TODO: Check if "tagging" is correct noun to use, or should I use "tag"?
 
 
-class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
+class DataOntoSearch_TaggingPlugin(
+    plugins.SingletonPlugin
+):
     """
     Plugin for tagging datasets with relevant concepts.
     """
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IPackageController, inherit=True)
 
     # IConfigurer
 
@@ -52,6 +55,14 @@ class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
             'dataontosearch_tagging_delete': dataontosearch_tagging_delete_auth,
             'dataontosearch_dataset_delete': dataontosearch_dataset_delete_auth,
         }
+
+    # IPackageController
+
+    def delete(self, entity):
+        # Delete dataset from DataOntoSearch when it is deleted from CKAN
+        toolkit.get_action('dataontosearch_dataset_delete')(None, {
+            'id': entity.id
+        })
 
 
 @toolkit.side_effect_free
