@@ -36,6 +36,7 @@ class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
             'dataontosearch_tagging_list_all': dataontosearch_tagging_list_all,
             'dataontosearch_tagging_list': dataontosearch_tagging_list,
             'dataontosearch_tagging_create': dataontosearch_tagging_create,
+            'dataontosearch_tagging_delete': dataontosearch_tagging_delete,
         }
 
     # IAuthFunctions
@@ -46,6 +47,7 @@ class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
             'dataontosearch_tagging_list_all': dataontosearch_tagging_list_all_auth,
             'dataontosearch_tagging_list': dataontosearch_tagging_list_auth,
             'dataontosearch_tagging_create': dataontosearch_tagging_create_auth,
+            'dataontosearch_tagging_delete': dataontosearch_tagging_delete_auth,
         }
 
 
@@ -213,6 +215,49 @@ def dataontosearch_tagging_create(context, data_dict):
 def dataontosearch_tagging_create_auth(context, data_dict):
     # TODO: Don't let people do tagging unless they can edit datasets and such
     # We allow anyone who is logged in
+    return {
+        'success': True
+    }
+
+
+def dataontosearch_tagging_delete(context, data_dict):
+    '''
+    Remove an existing association between the specified dataset and concept.
+
+    :param dataset: Name or ID of the dataset to disassociate with a concept
+    :type dataset: string
+    :param concept: RDF URI or human-readable label for the concept to no longer
+        associate with the dataset
+    :type dataset: string
+    :return: True
+    :rtype: bool
+    '''
+    toolkit.check_access('dataontosearch_tagging_delete', context, data_dict)
+
+    # Extract parameters from data_dict
+    dataset_id_or_name = toolkit.get_or_bust(data_dict, 'dataset')
+    concept_url_or_label = toolkit.get_or_bust(data_dict, 'concept')
+
+    # What dataset is specified?
+    dataset = toolkit.get_action('package_show')(None, {
+        'id': dataset_id_or_name,
+    })
+    dataset_rdf_uri = dataset_uri(dataset)
+
+    # Make the request
+    r = make_tagger_delete_request('/tagging', {
+        'dataset_id': dataset_rdf_uri,
+        'concept': concept_url_or_label,
+    })
+    r.raise_for_status()
+    data = r.json()
+
+    return data['success']
+
+
+def dataontosearch_tagging_delete_auth(context, data_dict):
+    # TODO: Don't let people remove tagging unless they can add tagging
+    # Allow anyone who is logged in
     return {
         'success': True
     }
