@@ -15,7 +15,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.0.3',
+    version='0.0.4',
 
     description='''Integration of an externally running DataOntoSearch instance, providing dataset tagging and search''',
     long_description=long_description,
@@ -82,6 +82,7 @@ setup(
         [ckan.plugins]
         dataontosearch_tagging=ckanext.dataontosearch.plugin:DataOntoSearch_TaggingPlugin
         dataontosearch_searching=ckanext.dataontosearch.plugin:DataOntoSearch_SearchingPlugin
+        test_url_for=ckanext.dataontosearch.test_url_for:TestUrlForPlugin
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

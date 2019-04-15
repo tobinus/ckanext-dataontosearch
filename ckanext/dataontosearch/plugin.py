@@ -1,5 +1,6 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import logging
 try:
     from ckanext.dcat.utils import dataset_uri
 except ImportError:
@@ -8,6 +9,9 @@ except ImportError:
         'find the latter'
     )
 import requests
+
+
+logger = logging.getLogger(__name__)
 
 
 # TODO: Use Unicode literals everywhere
@@ -197,9 +201,9 @@ def dataontosearch_tagging_create(context, data_dict):
     # .rdf suffix
     dataset_id = dataset.get('id')
     dataset_url = toolkit.url_for(
-        'dataset.read',
+        'dataset_read',
         id=dataset_id,
-        _external=True
+        qualified=True
     )
     rdf_url = '{}.rdf'.format(dataset_url)
 
@@ -339,6 +343,7 @@ def make_tagger_get_request(endpoint, params=None):
 
 def make_tagger_post_request(endpoint, json=None):
     url = make_tagger_url(endpoint)
+    logger.debug('About to send the following JSON: ' + repr(json))
     return _make_generic_request(url, 'post', json=json)
 
 
@@ -354,6 +359,7 @@ def _make_generic_request(url, method='get', **kwargs):
     else:
         auth = None
 
+    logger.debug('Sending {} request to {}'.format(method, url))
     return getattr(requests, method)(
         url,
         timeout=29.,
