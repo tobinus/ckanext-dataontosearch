@@ -35,6 +35,7 @@ class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
             'dataontosearch_concept_list': dataontosearch_concept_list,
             'dataontosearch_tagging_list_all': dataontosearch_tagging_list_all,
             'dataontosearch_tagging_list': dataontosearch_tagging_list,
+            'dataontosearch_tagging_create': dataontosearch_tagging_create,
         }
 
     # IAuthFunctions
@@ -44,6 +45,7 @@ class DataOntoSearch_TaggingPlugin(plugins.SingletonPlugin):
             'dataontosearch_concept_list': dataontosearch_concept_list_auth,
             'dataontosearch_tagging_list_all': dataontosearch_tagging_list_all_auth,
             'dataontosearch_tagging_list': dataontosearch_tagging_list_auth,
+            'dataontosearch_tagging_create': dataontosearch_tagging_create_auth,
         }
 
 
@@ -150,6 +152,72 @@ def dataontosearch_tagging_list_auth(context, data_dict):
     }
 
 
+def dataontosearch_tagging_create(context, data_dict):
+    '''
+    Create a new association between the specified dataset and concept.
+
+    :param dataset: Name or ID of the dataset to associate with a concept
+    :type dataset: string
+    :param concept: RDF URI or human-readable label for the concept to associate
+        with the dataset
+    :type dataset: string
+    :return: The dataset, concept and id for the newly created tagging
+    :rtype: dictionary
+    '''
+    toolkit.check_access('dataontosearch_tagging_create', context, data_dict)
+
+    # Extract parameters from data_dict
+    dataset_id_or_name = toolkit.get_or_bust(data_dict, 'dataset')
+    concept_url_or_label = toolkit.get_or_bust(data_dict, 'concept')
+
+    # We must provide DataOntoSearch with a URL of where to download metadata,
+    # so generate this URL. First, what dataset was specified?
+    dataset = toolkit.get_action('package_show')(
+        None,
+        {'id': dataset_id_or_name}
+    )
+
+    # We assume the RDF is available at the usual dataset URL, but with a
+    # .rdf suffix
+    dataset_id = dataset.get('id')
+    dataset_url = toolkit.url_for(
+        'dataset.read',
+        id=dataset_id,
+        _external=True
+    )
+    rdf_url = '{}.rdf'.format(dataset_url)
+
+    # Now we are equipped to actually create the tagging
+    r = make_tagger_post_request(
+        '/tagging',
+        {
+            'dataset_url': rdf_url,
+            'concept': concept_url_or_label,
+        }
+    )
+    r.raise_for_status()
+
+    # Handle response
+    data = r.json()
+
+    if not data['success']:
+        raise RuntimeError(data['message'])
+
+    return {
+        'dataset': dataset_id,
+        'concept': concept_url_or_label,
+        'id': data['id'],
+    }
+
+
+def dataontosearch_tagging_create_auth(context, data_dict):
+    # TODO: Don't let people do tagging unless they can edit datasets and such
+    # We allow anyone who is logged in
+    return {
+        'success': True
+    }
+
+
 class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
     """
     Plugin for searching for datasets using semantic search in DataOntoSearch.
@@ -165,35 +233,49 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
 
 
 def make_tagger_get_request(endpoint, params=None):
-    url = '{base}/api/v1/{config}{endpoint}'.format(
-        base=get_tagger_url(),
-        config=get_configuration(),
-        endpoint=endpoint,
-    )
-    return _make_generic_get_request(url, params)
+    url = make_tagger_url(endpoint)
+    return _make_generic_request(url, params=params)
 
 
-def _make_generic_get_request(url, params=None):
+def make_tagger_post_request(endpoint, json=None):
+    url = make_tagger_url(endpoint)
+    return _make_generic_request(url, 'post', json=json)
+
+
+def make_tagger_delete_request(endpoint, json=None):
+    url = make_tagger_url(endpoint)
+    return _make_generic_request(url, 'delete', json=json)
+
+
+def _make_generic_request(url, method='get', **kwargs):
     username, password = get_credentials()
     if username is not None and password is not None:
         auth = (username, password)
     else:
         auth = None
 
-    return requests.get(
+    return getattr(requests, method)(
         url,
-        params,
         timeout=29.,
         auth=auth,
+        **kwargs
     )
 
 
-def get_tagger_url():
+def make_tagger_url(endpoint):
+    return '{base}/api/v1/{config}{endpoint}'.format(
+        base=get_tagger_base(),
+        config=get_configuration(),
+        endpoint=endpoint,
+    )
+
+
+def get_tagger_base():
     tagger_url = toolkit.config['ckan.dataontosearch.tagger_url']
-    return tagger_url
+    return tagger_url.rstrip('/')
 
 
-def get_search_url():
+def get_search_base():
     search_url = toolkit.config['ckan.dataontosearch.search_url']
     return search_url
 
