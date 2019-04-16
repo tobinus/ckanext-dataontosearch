@@ -64,19 +64,27 @@ To install ckanext-dataontosearch:
 
 .. _ckanext-dcat: https://github.com/ckan/ckanext-dcat
 
-2. Activate your CKAN virtual environment, for example::
+2. Ensure that CKAN can accept multiple requests in parallel. For example, if
+   you use ``gunicorn`` to run your application, you could use the ``-w`` flag
+   to specify more than 1 worker: ``gunicorn -w 4 …`` (This is necessary
+   because this extension's request to DataOntoSearch might cause
+   DataOntoSearch to make a request back to CKAN, so the applications would end
+   up waiting for each other in a deadlock.) Note that the ``debug`` setting
+   must be set to ``false`` for CKAN to work in parallel.
+
+3. Activate your CKAN virtual environment, for example::
 
      . /usr/lib/ckan/default/bin/activate
 
-3. Install the ckanext-dataontosearch Python package into your virtual environment::
+4. Install the ckanext-dataontosearch Python package into your virtual environment::
 
      pip install ckanext-dataontosearch
 
-4. Add ``dataontosearch_tagging`` and ``dataontosearch_searching`` to the ``ckan.plugins`` setting in your CKAN
+5. Add ``dataontosearch_tagging`` and ``dataontosearch_searching`` to the ``ckan.plugins`` setting in your CKAN
    config file (by default the config file is located at
    ``/etc/ckan/default/production.ini``). Both are not required, any one of them can be used alone, but that is rather uncommon. They need to be listed after the ``dcat`` plugins.
 
-5. Add required settings:
+6. Add required settings:
 
      # Base URL where dataset_tagger is running
      ckan.dataontosearch.tagger_url = https://example.com/tagger
@@ -87,7 +95,7 @@ To install ckanext-dataontosearch:
      # The DataOntoSearch Configuration to use
      ckan.dataontosearch.configuration = 5c7ea259c556bb42803fa17e
 
-6. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+7. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
      sudo service apache2 reload
 
