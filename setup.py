@@ -82,7 +82,6 @@ setup(
         [ckan.plugins]
         dataontosearch_tagging=ckanext.dataontosearch.plugin:DataOntoSearch_TaggingPlugin
         dataontosearch_searching=ckanext.dataontosearch.plugin:DataOntoSearch_SearchingPlugin
-        test_url_for=ckanext.dataontosearch.test_url_for:TestUrlForPlugin
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan
