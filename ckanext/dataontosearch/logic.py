@@ -232,9 +232,12 @@ def dataontosearch_dataset_search(context, data_dict):
 
     :param q: the query to use when searching
     :type q: string
-    :rtype: dictionary with
+    :rtype: dictionary with concepts that matched the query, and results with a
+        list of datasets that matched. For each dataset, their (similarity)
+        score, title, description, (RDF) uri and (similar) concepts. For each
+        concept, their RDF IRI is available as 'concept' and similarity score as
+        'similarity'
     '''
-    # TODO: Finish writing docstring for this action
     toolkit.check_access(u'dataontosearch_dataset_search', context, data_dict)
 
     # TODO: Call the API of DataOntoSearch
