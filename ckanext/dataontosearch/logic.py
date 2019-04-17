@@ -46,7 +46,7 @@ def dataontosearch_tagging_list_all(context, data_dict):
         label and 'uri' being the URI identifying this concept.
     '''
     toolkit.check_access(u'dataontosearch_tagging_list_all', context, data_dict)
-    r = make_tagger_get_request(u'/tagging')
+    r = make_tagger_get_request(u'/tag')
     r.raise_for_status()
 
     data = r.json()
@@ -88,7 +88,7 @@ def dataontosearch_tagging_list(context, data_dict):
     # when it retrieved the dataset RDF, thus this use of the internal DCAT API.
     dataset_rdf_uri = dataset_uri(dataset)
 
-    r = make_tagger_get_request(u'/tagging', {u'dataset_id': dataset_rdf_uri})
+    r = make_tagger_get_request(u'/tag', {u'dataset_id': dataset_rdf_uri})
     r.raise_for_status()
 
     data = r.json()
@@ -136,7 +136,7 @@ def dataontosearch_tagging_create(context, data_dict):
 
     # Now we are equipped to actually create the tagging
     r = make_tagger_post_request(
-        u'/tagging',
+        u'/tag',
         {
             u'dataset_url': rdf_url,
             u'concept': concept_url_or_label,
@@ -182,7 +182,7 @@ def dataontosearch_tagging_delete(context, data_dict):
     dataset_rdf_uri = dataset_uri(dataset)
 
     # Make the request
-    r = make_tagger_delete_request(u'/tagging', {
+    r = make_tagger_delete_request(u'/tag', {
         u'dataset_id': dataset_rdf_uri,
         u'concept': concept_url_or_label,
     })
