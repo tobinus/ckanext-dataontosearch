@@ -349,6 +349,7 @@ def make_tagger_post_request(endpoint, json=None):
 
 def make_tagger_delete_request(endpoint, json=None):
     url = make_tagger_url(endpoint)
+    logger.debug('About to send the following JSON: ' + repr(json))
     return _make_generic_request(url, 'delete', json=json)
 
 
