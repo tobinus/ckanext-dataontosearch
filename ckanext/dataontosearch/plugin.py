@@ -2,16 +2,8 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-from ckanext.dataontosearch.logic import (
-    dataontosearch_concept_list, dataontosearch_tag_list_all,
-    dataontosearch_tag_list, dataontosearch_tag_create,
-    dataontosearch_tag_delete, dataontosearch_dataset_delete
-)
-from ckanext.dataontosearch.auth import (
-    dataontosearch_concept_list_auth, dataontosearch_tag_list_all_auth,
-    dataontosearch_tag_list_auth, dataontosearch_tag_create_auth,
-    dataontosearch_tag_delete_auth, dataontosearch_dataset_delete_auth
-)
+import ckanext.dataontosearch.logic as logic
+import ckanext.dataontosearch.auth as auth
 
 
 class DataOntoSearch_TaggingPlugin(
@@ -36,24 +28,26 @@ class DataOntoSearch_TaggingPlugin(
 
     def get_actions(self):
         return {
-            u'dataontosearch_concept_list': dataontosearch_concept_list,
-            u'dataontosearch_tag_list_all': dataontosearch_tag_list_all,
-            u'dataontosearch_tag_list': dataontosearch_tag_list,
-            u'dataontosearch_tag_create': dataontosearch_tag_create,
-            u'dataontosearch_tag_delete': dataontosearch_tag_delete,
-            u'dataontosearch_dataset_delete': dataontosearch_dataset_delete,
+            u'dataontosearch_concept_list': logic.dataontosearch_concept_list,
+            u'dataontosearch_tag_list_all': logic.dataontosearch_tag_list_all,
+            u'dataontosearch_tag_list': logic.dataontosearch_tag_list,
+            u'dataontosearch_tag_create': logic.dataontosearch_tag_create,
+            u'dataontosearch_tag_delete': logic.dataontosearch_tag_delete,
+            u'dataontosearch_dataset_delete':
+                logic.dataontosearch_dataset_delete,
         }
 
     # IAuthFunctions
 
     def get_auth_functions(self):
         return {
-            u'dataontosearch_concept_list': dataontosearch_concept_list_auth,
-            u'dataontosearch_tag_list_all': dataontosearch_tag_list_all_auth,
-            u'dataontosearch_tag_list': dataontosearch_tag_list_auth,
-            u'dataontosearch_tag_create': dataontosearch_tag_create_auth,
-            u'dataontosearch_tag_delete': dataontosearch_tag_delete_auth,
-            u'dataontosearch_dataset_delete': dataontosearch_dataset_delete_auth,
+            u'dataontosearch_concept_list': auth.dataontosearch_concept_list,
+            u'dataontosearch_tag_list_all': auth.dataontosearch_tag_list_all,
+            u'dataontosearch_tag_list': auth.dataontosearch_tag_list,
+            u'dataontosearch_tag_create': auth.dataontosearch_tag_create,
+            u'dataontosearch_tag_delete': auth.dataontosearch_tag_delete,
+            u'dataontosearch_dataset_delete':
+                auth.dataontosearch_dataset_delete,
         }
 
     # IPackageController

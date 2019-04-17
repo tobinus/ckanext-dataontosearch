@@ -2,28 +2,28 @@
 import ckan.plugins.toolkit as toolkit
 
 
-def dataontosearch_concept_list_auth(context, data_dict):
+def dataontosearch_concept_list(context, data_dict):
     # Simply require users to be logged in
     return {
         u'success': True
     }
 
 
-def dataontosearch_tag_list_all_auth(context, data_dict):
+def dataontosearch_tag_list_all(context, data_dict):
     # Simply require users to be logged in
     return {
         u'success': True
     }
 
 
-def dataontosearch_tag_list_auth(context, data_dict):
+def dataontosearch_tag_list(context, data_dict):
     # Simply require users to be logged in
     return {
         u'success': True
     }
 
 
-def dataontosearch_tag_create_auth(context, data_dict):
+def dataontosearch_tag_create(context, data_dict):
     dataset_id_or_name = toolkit.get_or_bust(data_dict, u'dataset')
     try:
         toolkit.check_access(u'package_update', None, {u'id': dataset_id_or_name})
@@ -39,16 +39,16 @@ def dataontosearch_tag_create_auth(context, data_dict):
         }
 
 
-def dataontosearch_tag_delete_auth(context, data_dict):
+def dataontosearch_tag_delete(context, data_dict):
     # Use same permissions as for creating the tagging
-    return dataontosearch_tag_create_auth(context, data_dict)
+    return dataontosearch_tag_create(context, data_dict)
 
 
-def dataontosearch_dataset_delete_auth(context, data_dict):
+def dataontosearch_dataset_delete(context, data_dict):
     # This is not as destructive as deleting a dataset, so use same permissions
     # as for removing taggings individually.
     dataset_id_or_name = toolkit.get_or_bust(data_dict, u'id')
-    tagging_permission = dataontosearch_tag_delete_auth(
+    tagging_permission = dataontosearch_tag_delete(
         context,
         {u'dataset': dataset_id_or_name}
     )
