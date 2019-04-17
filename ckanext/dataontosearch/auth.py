@@ -68,3 +68,11 @@ def dataontosearch_dataset_delete(context, data_dict):
         except toolkit.NotAuthorized:
             # We can finally conclude that the user is not authorized to do this
             return tagging_permission
+
+
+@toolkit.auth_allow_anonymous_access
+def dataontosearch_dataset_search(context, data_dict):
+    # Let everyone enjoy the joy of searching
+    return {
+        u'success': True
+    }

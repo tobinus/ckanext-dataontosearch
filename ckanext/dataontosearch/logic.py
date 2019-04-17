@@ -225,3 +225,18 @@ def dataontosearch_dataset_delete(context, data_dict):
     return data[u'success']
 
 
+@toolkit.side_effect_free
+def dataontosearch_dataset_search(context, data_dict):
+    '''
+    Perform a semantic search using DataOntoSearch.
+
+    :param q: the query to use when searching
+    :type q: string
+    :rtype: dictionary with
+    '''
+    # TODO: Finish writing docstring for this action
+    toolkit.check_access(u'dataontosearch_dataset_search', context, data_dict)
+
+    # TODO: Call the API of DataOntoSearch
+    # TODO: Process the results (if necessary)
+    # TODO: Return the results

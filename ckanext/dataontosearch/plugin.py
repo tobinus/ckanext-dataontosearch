@@ -64,6 +64,8 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
     Plugin for searching for datasets using semantic search in DataOntoSearch.
     """
     plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IAuthFunctions)
 
     # IConfigurer
 
@@ -71,3 +73,19 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, u'templates')
         toolkit.add_public_directory(config_, u'public')
         toolkit.add_resource(u'fanstatic', u'dataontosearch')
+
+    # IActions
+
+    def get_actions(self):
+        return {
+            u'dataontosearch_dataset_search':
+                logic.dataontosearch_dataset_search,
+        }
+
+    # IAuthFunctions
+
+    def get_auth_functions(self):
+        return {
+            u'dataontosearch_dataset_search':
+                auth.dataontosearch_dataset_search,
+        }
