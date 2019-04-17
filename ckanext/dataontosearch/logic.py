@@ -37,21 +37,21 @@ def dataontosearch_concept_list(context, data_dict):
 
 
 @toolkit.side_effect_free
-def dataontosearch_tagging_list_all(context, data_dict):
+def dataontosearch_tag_list_all(context, data_dict):
     '''
-    List existing taggings for all datasets.
+    List existing DataOntoSearch tags for all datasets.
 
     :rtype: dictionary where key is ID of a dataset, and value is a list of
         concepts. Each concept is a dict, with 'label' being human-readable
         label and 'uri' being the URI identifying this concept.
     '''
-    toolkit.check_access(u'dataontosearch_tagging_list_all', context, data_dict)
+    toolkit.check_access(u'dataontosearch_tag_list_all', context, data_dict)
     r = make_tagger_get_request(u'/tag')
     r.raise_for_status()
 
     data = r.json()
 
-    taggings = dict()
+    tags = dict()
 
     for uri, details in data.iteritems():
         # Try to extract the ID of this dataset
@@ -62,22 +62,22 @@ def dataontosearch_tagging_list_all(context, data_dict):
 
         result = model.Package.get(dataset_id)
         if result:
-            taggings[dataset_id] = details[u'concepts']
+            tags[dataset_id] = details[u'concepts']
 
-    return taggings
+    return tags
 
 
 @toolkit.side_effect_free
-def dataontosearch_tagging_list(context, data_dict):
+def dataontosearch_tag_list(context, data_dict):
     '''
-    List existing taggings for the specified dataset.
+    List concepts associated with the specified dataset.
 
-    :param id: id or name of the dataset to fetch taggings for
+    :param id: id or name of the dataset to fetch tags for
     :type id: string
     :rtype: list of concepts. Each concept is a dict, with 'label' being
         human-readable label and 'uri' being the URI identifying this concept
     '''
-    toolkit.check_access(u'dataontosearch_tagging_list', context, data_dict)
+    toolkit.check_access(u'dataontosearch_tag_list', context, data_dict)
 
     # What dataset is specified?
     dataset_id_or_name = toolkit.get_or_bust(data_dict, u'id')
@@ -99,7 +99,7 @@ def dataontosearch_tagging_list(context, data_dict):
         return data[u'concepts']
 
 
-def dataontosearch_tagging_create(context, data_dict):
+def dataontosearch_tag_create(context, data_dict):
     '''
     Create a new association between the specified dataset and concept.
 
@@ -108,10 +108,10 @@ def dataontosearch_tagging_create(context, data_dict):
     :param concept: RDF URI or human-readable label for the concept to associate
         with the dataset
     :type dataset: string
-    :return: The dataset, concept and id for the newly created tagging
+    :return: The dataset, concept and id for the newly created tag
     :rtype: dictionary
     '''
-    toolkit.check_access(u'dataontosearch_tagging_create', context, data_dict)
+    toolkit.check_access(u'dataontosearch_tag_create', context, data_dict)
 
     # Extract parameters from data_dict
     dataset_id_or_name = toolkit.get_or_bust(data_dict, u'dataset')
@@ -134,7 +134,7 @@ def dataontosearch_tagging_create(context, data_dict):
     )
     rdf_url = u'{}.rdf'.format(dataset_url)
 
-    # Now we are equipped to actually create the tagging
+    # Now we are equipped to actually create the tag
     r = make_tagger_post_request(
         u'/tag',
         {
@@ -157,7 +157,7 @@ def dataontosearch_tagging_create(context, data_dict):
     }
 
 
-def dataontosearch_tagging_delete(context, data_dict):
+def dataontosearch_tag_delete(context, data_dict):
     '''
     Remove an existing association between the specified dataset and concept.
 
@@ -169,7 +169,7 @@ def dataontosearch_tagging_delete(context, data_dict):
     :return: True
     :rtype: bool
     '''
-    toolkit.check_access(u'dataontosearch_tagging_delete', context, data_dict)
+    toolkit.check_access(u'dataontosearch_tag_delete', context, data_dict)
 
     # Extract parameters from data_dict
     dataset_id_or_name = toolkit.get_or_bust(data_dict, u'dataset')

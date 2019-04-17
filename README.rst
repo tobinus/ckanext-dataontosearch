@@ -36,7 +36,7 @@ Extension for integrating CKAN with DataOntoSearch.
 
 DataOntoSearch is a project which aims to make it easier to find datasets, by using a domain-specific ontology to find similar datasets. The software is run as a separate server, which other projects like CKAN can connect to.
 
-There are two separate plugins provided with this extension. ``dataontosearch_tagging`` provides a way of associating datasets with concepts in the ontology. ``dataontosearch_searching`` provides an integrated way of searching using DataOntoSearch.
+There are two separate plugins provided with this extension. ``dataontosearch_tagging`` provides a way of associating datasets with concepts in the ontology. (Each such association is internally called a "tag", which should not be confused with the traditional tags CKAN provide.) ``dataontosearch_searching`` provides an integrated way of searching using DataOntoSearch.
 
 The extension adds a link you can follow when editing datasets. From there, you can change what concepts are connected to what datasets.
 
@@ -84,7 +84,7 @@ To install ckanext-dataontosearch:
    config file (by default the config file is located at
    ``/etc/ckan/default/production.ini``). Both are not required, any one of them can be used alone, but that is rather uncommon. They need to be listed after the ``dcat`` plugins.
 
-6. Add required settings:
+6. Add required settings::
 
      # Base URL where dataset_tagger is running
      ckan.dataontosearch.tagger_url = https://example.com/tagger
@@ -140,9 +140,9 @@ coverage installed in your virtualenv (``pip install coverage``) then run::
     nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.dataontosearch --cover-inclusive --cover-erase --cover-tests
 
 
-----------------------------------------
+-------------------------------------------------
 Releasing a New Version of ckanext-dataontosearch
-----------------------------------------
+-------------------------------------------------
 
 ckanext-dataontosearch is availabe on PyPI as https://pypi.python.org/pypi/ckanext-dataontosearch.
 To publish a new version to PyPI follow these steps:

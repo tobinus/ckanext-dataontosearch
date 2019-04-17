@@ -3,18 +3,15 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 from ckanext.dataontosearch.logic import (
-    dataontosearch_concept_list, dataontosearch_tagging_list_all,
-    dataontosearch_tagging_list, dataontosearch_tagging_create,
-    dataontosearch_tagging_delete, dataontosearch_dataset_delete
+    dataontosearch_concept_list, dataontosearch_tag_list_all,
+    dataontosearch_tag_list, dataontosearch_tag_create,
+    dataontosearch_tag_delete, dataontosearch_dataset_delete
 )
 from ckanext.dataontosearch.auth import (
-    dataontosearch_concept_list_auth, dataontosearch_tagging_list_all_auth,
-    dataontosearch_tagging_list_auth, dataontosearch_tagging_create_auth,
-    dataontosearch_tagging_delete_auth, dataontosearch_dataset_delete_auth
+    dataontosearch_concept_list_auth, dataontosearch_tag_list_all_auth,
+    dataontosearch_tag_list_auth, dataontosearch_tag_create_auth,
+    dataontosearch_tag_delete_auth, dataontosearch_dataset_delete_auth
 )
-
-
-# TODO: Check if "tagging" is correct noun to use, or should I use "tag"?
 
 
 class DataOntoSearch_TaggingPlugin(
@@ -40,10 +37,10 @@ class DataOntoSearch_TaggingPlugin(
     def get_actions(self):
         return {
             u'dataontosearch_concept_list': dataontosearch_concept_list,
-            u'dataontosearch_tagging_list_all': dataontosearch_tagging_list_all,
-            u'dataontosearch_tagging_list': dataontosearch_tagging_list,
-            u'dataontosearch_tagging_create': dataontosearch_tagging_create,
-            u'dataontosearch_tagging_delete': dataontosearch_tagging_delete,
+            u'dataontosearch_tag_list_all': dataontosearch_tag_list_all,
+            u'dataontosearch_tag_list': dataontosearch_tag_list,
+            u'dataontosearch_tag_create': dataontosearch_tag_create,
+            u'dataontosearch_tag_delete': dataontosearch_tag_delete,
             u'dataontosearch_dataset_delete': dataontosearch_dataset_delete,
         }
 
@@ -52,10 +49,10 @@ class DataOntoSearch_TaggingPlugin(
     def get_auth_functions(self):
         return {
             u'dataontosearch_concept_list': dataontosearch_concept_list_auth,
-            u'dataontosearch_tagging_list_all': dataontosearch_tagging_list_all_auth,
-            u'dataontosearch_tagging_list': dataontosearch_tagging_list_auth,
-            u'dataontosearch_tagging_create': dataontosearch_tagging_create_auth,
-            u'dataontosearch_tagging_delete': dataontosearch_tagging_delete_auth,
+            u'dataontosearch_tag_list_all': dataontosearch_tag_list_all_auth,
+            u'dataontosearch_tag_list': dataontosearch_tag_list_auth,
+            u'dataontosearch_tag_create': dataontosearch_tag_create_auth,
+            u'dataontosearch_tag_delete': dataontosearch_tag_delete_auth,
             u'dataontosearch_dataset_delete': dataontosearch_dataset_delete_auth,
         }
 
