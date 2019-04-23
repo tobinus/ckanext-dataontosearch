@@ -24,6 +24,18 @@ def make_tagger_delete_request(endpoint, json=None):
     return _make_generic_request(url, u'delete', json=json)
 
 
+def make_search_get_request(endpoint, params=None):
+    url = make_search_url(endpoint)
+
+    # Inject configuration parameter
+    if params is None:
+        params = {u'c': get_configuration()}
+    else:
+        params[u'c'] = get_configuration()
+
+    return _make_generic_request(url, params=params)
+
+
 def _make_generic_request(url, method=u'get', **kwargs):
     username, password = get_credentials()
     if username is not None and password is not None:
@@ -51,6 +63,13 @@ def make_tagger_url(endpoint):
 def get_tagger_base():
     tagger_url = toolkit.config[u'ckan.dataontosearch.tagger_url']
     return tagger_url.rstrip(u'/')
+
+
+def make_search_url(endpoint):
+    return u'{base}/api/v1{endpoint}'.format(
+        base=get_search_base(),
+        endpoint=endpoint
+    )
 
 
 def get_search_base():

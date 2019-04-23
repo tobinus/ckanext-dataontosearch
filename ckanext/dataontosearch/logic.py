@@ -11,7 +11,7 @@ except ImportError:
 
 from ckanext.dataontosearch.utils import (
     make_tagger_get_request, make_tagger_delete_request,
-    make_tagger_post_request
+    make_tagger_post_request, make_search_get_request
 )
 
 logger = logging.getLogger(__name__)
@@ -230,16 +230,77 @@ def dataontosearch_dataset_search(context, data_dict):
     '''
     Perform a semantic search using DataOntoSearch.
 
+    The parameters and returned JSON is designed to be compatible with the
+    regular search (package_search) as far as possible, though only the q
+    parameter is supported. Some additional information from DataOntoSearch is
+    also available.
+
     :param q: the query to use when searching
     :type q: string
-    :rtype: dictionary with concepts that matched the query, and results with a
-        list of datasets that matched. For each dataset, their (similarity)
-        score, title, description, (RDF) uri and (similar) concepts. For each
-        concept, their RDF IRI is available as 'concept' and similarity score as
-        'similarity'
+    :rtype: dictionary with 'concepts' that matched the query, a 'count' of
+        results and 'results' with a list of datasets that matched. For each
+        dataset, their similarity 'score' and similar 'concepts' are available
+        in addition to the usual information given in package_show. For each
+        concept, their RDF IRI is available as 'concept' and similarity score
+        as 'similarity'
     '''
     toolkit.check_access(u'dataontosearch_dataset_search', context, data_dict)
 
-    # TODO: Call the API of DataOntoSearch
-    # TODO: Process the results (if necessary)
-    # TODO: Return the results
+    query = toolkit.get_or_bust(data_dict, u'q')
+
+    r = make_search_get_request(u'/search', {
+        u'q': query,
+    })
+    r.raise_for_status()
+    data = r.json()
+
+    results = data[u'results']
+    count = len(results)
+    query_concepts = data[u'concepts']
+
+    processed_results = []
+
+    for result in results:
+        # Extract the ID of this dataset
+        dataset_id = result[u'uri'].split(u'/')[-1]
+
+        # Fetch information about this dataset
+        try:
+            dataset_info = toolkit.get_action(u'package_show')(context, {
+                u'id': dataset_id,
+            })
+        except toolkit.ObjectNotFound:
+            # Perhaps not part of this CKAN? This should generally not happen,
+            # and can indicate some trouble with configurations in
+            # DataOntoSearch or changed ID or name in CKAN
+            logger.warning(
+                u'Skipping dataset %(uri)s returned from DataOntoSearch, not '
+                u'found in CKAN',
+                {u'uri': result[u'uri']},
+                exc_info=True
+            )
+            continue
+        except toolkit.NotAuthorized:
+            # This may be a private dataset or something, so don't show it
+            continue
+
+        # Enrich with information from DataOntoSearch's result
+        extra_info = {
+            u'concepts': result[u'concepts'],
+            u'score': result[u'score'],
+        }
+        dataset_info.update(extra_info)
+
+        # Processed!
+        processed_results.append(dataset_info)
+
+    return {
+        u'count': count,
+        u'results': processed_results,
+        u'concepts': query_concepts,
+        # Include dummy data for keys present in package_search
+        u'sort': u'',
+        u'facets': {},
+        u'search_facets': {}
+    }
+    # TODO: Test this out
