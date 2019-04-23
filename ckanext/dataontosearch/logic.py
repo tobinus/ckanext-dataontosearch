@@ -241,15 +241,17 @@ def dataontosearch_dataset_search(context, data_dict):
         results and 'results' with a list of datasets that matched. For each
         dataset, their similarity 'score' and similar 'concepts' are available
         in addition to the usual information given in package_show. For each
-        concept, their RDF IRI is available as 'concept' and similarity score
-        as 'similarity'
+        concept, their RDF IRI is available as 'uri', human-readable label as
+        'label' and similarity score as 'similarity'
     '''
     toolkit.check_access(u'dataontosearch_dataset_search', context, data_dict)
 
     query = toolkit.get_or_bust(data_dict, u'q')
 
+    # TODO: Let administrator configure search to use autotag
     r = make_search_get_request(u'/search', {
         u'q': query,
+        u'd': 0,
     })
     r.raise_for_status()
     data = r.json()
