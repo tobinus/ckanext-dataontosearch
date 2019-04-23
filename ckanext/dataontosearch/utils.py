@@ -88,3 +88,8 @@ def get_credentials():
 def get_configuration():
     configuration = toolkit.config.get(u'ckan.dataontosearch.configuration')
     return configuration
+
+
+def get_use_autotag():
+    use_autotag = toolkit.config.get(u'ckan.dataontosearch.use_autotag', False)
+    return toolkit.asbool(use_autotag)

@@ -11,7 +11,7 @@ except ImportError:
 
 from ckanext.dataontosearch.utils import (
     make_tagger_get_request, make_tagger_delete_request,
-    make_tagger_post_request, make_search_get_request
+    make_tagger_post_request, make_search_get_request, get_use_autotag
 )
 
 logger = logging.getLogger(__name__)
@@ -248,11 +248,14 @@ def dataontosearch_dataset_search(context, data_dict):
 
     query = toolkit.get_or_bust(data_dict, u'q')
 
-    # TODO: Let administrator configure search to use autotag
-    r = make_search_get_request(u'/search', {
+    parameters = {
         u'q': query,
         u'd': 0,
-    })
+    }
+    if get_use_autotag():
+        parameters[u'a'] = 1
+
+    r = make_search_get_request(u'/search', parameters)
     r.raise_for_status()
     data = r.json()
 

@@ -113,6 +113,13 @@ The required settings are described in the installation guide. In addition to th
     ckanext.dataontosearch.password = opensesame
 
 
+In addition, you can also tell the extension to use the autotagged similarity graph when searching, instead of the manual tags::
+
+    # Whether to use the autotagged graph instead of the manual one when
+    # searching (optional, default: no).
+    ckan.dataontosearch.use_autotag = yes
+
+
 ------------------------
 Development Installation
 ------------------------
