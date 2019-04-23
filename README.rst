@@ -156,7 +156,7 @@ To publish a new version to PyPI follow these steps:
 
 1. Update the version number in the ``setup.py`` file.
    See `PEP 440 <http://legacy.python.org/dev/peps/pep-0440/#public-version-identifiers>`_
-   for how to choose version numbers.
+   for how to choose version numbers, using the principles of `semantic versioning <https://semver.org/>`_.
 
 2. Create a source distribution of the new version::
 
