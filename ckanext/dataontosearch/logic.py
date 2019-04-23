@@ -282,6 +282,13 @@ def dataontosearch_dataset_search(context, data_dict):
             continue
         except toolkit.NotAuthorized:
             # This may be a private dataset or something, so don't show it
+            # TODO: Does CKAN reveal that the dataset exists, but is private?
+            logger.debug(
+                u'Skipping dataset %(uri)s since user is not authorized to see '
+                u'it',
+                {u'uri': result[u'uri']},
+                exc_info=True
+            )
             continue
 
         # Enrich with information from DataOntoSearch's result
