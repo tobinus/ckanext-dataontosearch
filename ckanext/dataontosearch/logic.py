@@ -303,4 +303,3 @@ def dataontosearch_dataset_search(context, data_dict):
         u'facets': {},
         u'search_facets': {}
     }
-    # TODO: Test this out
