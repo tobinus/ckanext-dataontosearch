@@ -4,6 +4,8 @@ import ckan.plugins.toolkit as toolkit
 
 import ckanext.dataontosearch.logic as logic
 import ckanext.dataontosearch.auth as auth
+from ckanext.dataontosearch.views.tagger import tagger as tagger_blueprint
+from ckanext.dataontosearch.views.search import search as search_blueprint
 
 
 class DataOntoSearch_TaggingPlugin(
@@ -16,7 +18,7 @@ class DataOntoSearch_TaggingPlugin(
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IPackageController, inherit=True)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
     # IConfigurer
 
@@ -59,11 +61,10 @@ class DataOntoSearch_TaggingPlugin(
             u'id': entity.id
         })
 
-    # IRoutes
+    # IBlueprint
 
-    def before_map(self, route_map):
-        # TODO: Add route for seeing and modifying tags
-        return route_map
+    def get_blueprint(self):
+        return tagger_blueprint
 
 
 class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
@@ -73,7 +74,7 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IBlueprint)
 
     # IConfigurer
 
@@ -98,8 +99,7 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
                 auth.dataontosearch_dataset_search,
         }
 
-    # IRoutes
+    # IBlueprint
 
-    def before_map(self, route_map):
-        # TODO: Add route for performing and showing search queries
-        return route_map
+    def get_blueprint(self):
+        return search_blueprint
