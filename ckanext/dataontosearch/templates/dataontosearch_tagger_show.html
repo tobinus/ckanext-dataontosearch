@@ -1,0 +1,40 @@
+{% extends "page.html" %}
+
+{% block title -%}
+    {% trans dataset_title=dataset.title, ckan_title=super() -%}
+        Concepts - {{ dataset_title }} - {{ ckan_title }}
+    {%- endtrans %}
+{%- endblock %}
+
+{% block primary_content %}
+    <h1>
+        {% trans dataset_title=dataset.title %}
+            Concepts associated with <em>{{ dataset_title }}</em>
+        {% endtrans %}
+    </h1>
+    {% if can_edit %}
+        <p>
+            <a
+                    class="btn btn-primary"
+                    href="{% url_for 'dataontosearch_tagger.edit', dataset_id=dataset.name %}"
+            >
+                {% trans %}
+                    Add or Remove Concepts
+                {% endtrans %}
+            </a>
+        </p>
+    {% endif %}
+    <ul>
+        {% for concept in concepts %}
+            <li>
+                {{ concept.label }}
+            </li>
+        {% else %}
+            <li><em>{% trans %}No concepts found.{% endtrans %}</em></li>
+        {% endfor %}
+    </ul>
+    <p>{% link_for _('View dataset'), named_route='dataset_read', id=dataset.name %}</p>
+{% endblock %}
+
+{% block actions %}
+{% endblock %}
