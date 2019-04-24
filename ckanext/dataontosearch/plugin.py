@@ -16,6 +16,7 @@ class DataOntoSearch_TaggingPlugin(
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IPackageController, inherit=True)
+    plugins.implements(plugins.IRoutes, inherit=True)
 
     # IConfigurer
 
@@ -58,6 +59,12 @@ class DataOntoSearch_TaggingPlugin(
             u'id': entity.id
         })
 
+    # IRoutes
+
+    def before_map(self, route_map):
+        # TODO: Add route for seeing and modifying tags
+        return route_map
+
 
 class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
     """
@@ -66,6 +73,7 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IRoutes, inherit=True)
 
     # IConfigurer
 
@@ -89,3 +97,9 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
             u'dataontosearch_dataset_search':
                 auth.dataontosearch_dataset_search,
         }
+
+    # IRoutes
+
+    def before_map(self, route_map):
+        # TODO: Add route for performing and showing search queries
+        return route_map
