@@ -3,7 +3,8 @@ import logging
 import functools
 import ckan.plugins.toolkit as toolkit
 
-from flask import Blueprint
+from flask import Blueprint, request
+from requests.exceptions import RequestException
 
 from ckanext.dataontosearch.views.utils import _log_exceptions
 
@@ -118,9 +119,55 @@ def show(context, dataset_dict, can_edit):
 @_log_exceptions
 @_with_dataset
 def edit(dataset_dict, context):
-    # Fetch tags for the dataset
-    existing_concepts = _get_existing_tags(context, dataset_dict)
+    is_submitted = request.method == u'POST'
+    error = None
 
+    if is_submitted:
+        new_tag_list = request.form.getlist(u'new_concept[]')
+        existing_tag_list = request.form.getlist(u'existing_concept[]')
+
+        new_tag_set = set(new_tag_list)
+        existing_tag_set = set(existing_tag_list)
+
+        added_tags = new_tag_set - existing_tag_set
+        removed_tags = existing_tag_set - new_tag_set
+
+        # TODO: Make this operation more atomic, not partially applied if error
+        # We add concepts first, since that's less destructive in case of error
+        try:
+            add_action = toolkit.get_action(u'dataontosearch_tag_create')
+            for new_concept in added_tags:
+                add_action(context, {
+                    u'dataset': dataset_dict[u'id'],
+                    u'concept': new_concept,
+                })
+
+            remove_action = toolkit.get_action(u'dataontosearch_tag_delete')
+            for removed_concept in removed_tags:
+                remove_action(context, {
+                    u'dataset': dataset_dict[u'id'],
+                    u'concept': removed_concept,
+                })
+        except (
+                toolkit.NotAuthorized,
+                toolkit.ObjectNotFound,
+                toolkit.ValidationError,
+                RequestException
+        ) as e:
+            logger.exception(
+                u'Failed to process edit of concepts for %s',
+                dataset_dict[u'id']
+            )
+            error = str(e)
+
+        # Redirect back (as GET request)
+        # TODO: Show user flash message about the changes being saved or error
+        return toolkit.redirect_to(
+            u'dataontosearch_tagger.edit',
+            dataset_id=dataset_dict[u'id']
+        )
+
+    # Okay, create the form
     if not _get_can_edit(context, dataset_dict):
         return toolkit.abort(
             401,
@@ -128,5 +175,8 @@ def edit(dataset_dict, context):
                       u'this dataset')
         )
 
-    # TODO: Implement editing (adding, removing) concepts
+    # Fetch tags for the dataset
+    existing_concepts = _get_existing_tags(context, dataset_dict)
+
+    # TODO: Implement form
     return toolkit.abort(500, u'Editing is not implemented yet')
