@@ -2,22 +2,25 @@
 import ckan.plugins.toolkit as toolkit
 
 
+@toolkit.auth_allow_anonymous_access
 def dataontosearch_concept_list(context, data_dict):
-    # Simply require users to be logged in
+    # Allow everyone
     return {
         u'success': True
     }
 
 
+@toolkit.auth_allow_anonymous_access
 def dataontosearch_tag_list_all(context, data_dict):
-    # Simply require users to be logged in
+    # Allow everyone
     return {
         u'success': True
     }
 
 
+@toolkit.auth_allow_anonymous_access
 def dataontosearch_tag_list(context, data_dict):
-    # Simply require users to be logged in
+    # Allow everyone
     return {
         u'success': True
     }

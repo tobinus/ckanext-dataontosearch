@@ -83,7 +83,7 @@ def _get_can_edit(context, dataset_dict):
             }
         )
         return True
-    except toolkit.Notauthorized:
+    except toolkit.NotAuthorized:
         logger.debug(u'User cannot edit concepts')
         return False
 
