@@ -15,7 +15,7 @@ search = Blueprint(
 )
 
 
-@search.route(u'/')
+@search.route(u'')
 @_log_exceptions
 def do_search():
     context = {}
