@@ -1,0 +1,68 @@
+{% extends "page.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block title -%}
+    {% set ckan_title=super() -%}
+    {% if query -%}
+        {% trans -%}
+            "{{ query }}" Semantic Search Result - Datasets - {{ ckan_title }}
+        {%- endtrans %}
+    {%- else -%}
+        {% trans -%}
+            Semantic Search - Datasets - {{ ckan_title }}
+        {%- endtrans %}
+    {%- endif %}
+{%- endblock %}
+
+
+{% block primary_content %}
+    {% if query %}
+        <h1>{% trans %}Semantic Search Results for "{{ query }}"{% endtrans %}</h1>
+    {% else %}
+        <h1>{% trans %}Semantic Search{% endtrans %}</h1>
+    {% endif %}
+
+    <form method="GET">
+        {{ form.input(
+                'q',
+                label=_('Query'),
+                value=query,
+                type='search'
+        ) }}
+        <input
+                type="submit"
+                value="{% trans %}Search{% endtrans %}"
+                class="btn btn-primary"
+        />
+    </form>
+
+    {% if search and search.count %}
+        <p>
+            {% trans count=search.count %}
+                The search returned {{ count }} dataset.
+            {% pluralize %}
+                The search returned {{ count }} datasets.
+            {% endtrans %}
+        </p>
+
+        <hr/>
+
+        {% snippet 'snippets/package_list.html', packages=search.results %}
+    {% elif search and not search.count %}
+        <p>{% trans %}The search didn't match any datasets.{% endtrans %}</p>
+    {% endif %}
+{% endblock %}
+
+{% block secondary_content %}
+    {% if search %}
+        <h2>{% trans %}Matching concepts{% endtrans %}</h2>
+
+        <ul>
+            {% for concept in search.concepts %}
+                {% set sim = (concept.similarity*100)|round|int %}
+                {% set label = concept.label %}
+                <li>{% trans %}{{ label }} ({{ sim }}%){% endtrans %}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
