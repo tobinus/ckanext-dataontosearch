@@ -1,0 +1,9 @@
+{% ckan_extends %}
+{% block search_input %}
+    {{ super() }}
+    <p style="margin-bottom: 30px">
+        <a href="{% url_for 'dataontosearch_search.do_search', q=query %}">
+            {% trans %}Switch to Semantic Search{% endtrans %}
+        </a>
+    </p>
+{% endblock %}

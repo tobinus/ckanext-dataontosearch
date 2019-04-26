@@ -22,28 +22,44 @@
         <h1>{% trans %}Semantic Search{% endtrans %}</h1>
     {% endif %}
 
-    <form method="GET">
-        {{ form.input(
-                'q',
-                label=_('Query'),
-                value=query,
-                type='search'
-        ) }}
-        <input
-                type="submit"
-                value="{% trans %}Search{% endtrans %}"
-                class="btn btn-primary"
-        />
-    </form>
+    <section>
+        <form method="GET">
+            {# Adapted from CKAN's snippets/search_form #}
+            <div class="input-group search-input-group">
+                {% set search_label = _('Search datasets…') %}
+                <input
+                        aria-label="{{ search_label }}"
+                        class="form-control"
+                        id="q"
+                        type="search"
+                        name="q"
+                        value="{{ query }}"
+                        placeholder="{{ search_label }}"
+                />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" value="search">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
 
-    {% if search and search.count %}
         <p>
+            <a
+                href="{% url_for controller='package', action='search', q=query %}"
+            >
+                {% trans %}Switch to normal search{% endtrans %}
+            </a>
+        </p>
+    </section>
+    {% if search and search.count %}
+        <p><strong>
             {% trans count=search.count %}
                 The search returned {{ count }} dataset.
             {% pluralize %}
                 The search returned {{ count }} datasets.
             {% endtrans %}
-        </p>
+        </strong></p>
 
         <hr/>
 
