@@ -120,6 +120,7 @@ def show(context, dataset_dict, can_edit):
 @_with_dataset
 def edit(dataset_dict, context):
     is_submitted = request.method == u'POST'
+    empty_value = u'NONE'
     error = None
 
     if is_submitted:
@@ -127,7 +128,9 @@ def edit(dataset_dict, context):
         existing_tag_list = request.form.getlist(u'existing_concept[]')
 
         new_tag_set = set(new_tag_list)
+        new_tag_set.discard(empty_value)
         existing_tag_set = set(existing_tag_list)
+
 
         added_tags = new_tag_set - existing_tag_set
         removed_tags = existing_tag_set - new_tag_set
@@ -178,5 +181,33 @@ def edit(dataset_dict, context):
     # Fetch tags for the dataset
     existing_concepts = _get_existing_tags(context, dataset_dict)
 
-    # TODO: Implement form
-    return toolkit.abort(500, u'Editing is not implemented yet')
+    # Fetch available tags
+    available_concepts = toolkit.get_action(u'dataontosearch_concept_list')(
+        context,
+        {}
+    )
+
+    # Fetch concepts that can be chosen
+    available_concept_options = []
+    for concept_iri, concept_info in available_concepts.iteritems():
+        available_concept_options.append({
+            u'value': concept_iri,
+            u'text': concept_info[u'label'],
+        })
+    # Sort concepts by label
+    available_concept_options.sort(key=lambda d: d[u'text'])
+    # Add the default "empty" option
+    available_concept_options.insert(0, {
+        u'value': empty_value,
+        u'text': toolkit._(u'-- No concept chosen --'),
+    })
+
+    return toolkit.render(
+        u'dataontosearch_tagger_edit.html',
+        {
+            u'dataset': dataset_dict,
+            u'concept_options': available_concept_options,
+            u'default_option_value': empty_value,
+            u'chosen_concepts': existing_concepts,
+        }
+    )

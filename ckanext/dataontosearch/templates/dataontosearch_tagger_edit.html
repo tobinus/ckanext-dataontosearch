@@ -1,0 +1,109 @@
+{% extends 'page.html' %}
+{% import 'macros/form.html' as form %}
+
+{% block title -%}
+    {% trans dataset_title=dataset.title, ckan_title=super() -%}
+        Editing concepts - {{ dataset_title }} - {{ ckan_title }}
+    {%- endtrans %}
+{%- endblock %}
+
+{% block primary_content %}
+    {# TODO: Add display of flash messages, if not present in page.html already #}
+    <h1>
+        {% trans dataset_title=dataset.title %}
+            Editing concepts associated with <em>{{ dataset_title }}</em>
+        {% endtrans %}
+    </h1>
+    <form method="POST">
+        {% for concept in chosen_concepts %}
+            {# List all existing tags, so the form handler knows what changed #}
+            <input
+                    type="hidden"
+                    name="existing_concept[]"
+                    value="{{ concept.uri }}"
+            />
+            {# But also let the user change this #}
+            {{ form.select(
+                    'new_concept[]',
+                    options=concept_options,
+                    selected=concept.uri,
+                    label=_('Concept')
+            ) }}
+        {% else %}
+            {# If none are selected, allow one additional blank field #}
+            {# TODO: Eliminate the duplication of defining blank select fields #}
+            {{ form.select(
+                    'new_concept[]',
+                    options=concept_options,
+                    selected=default_option_value,
+                    label=_('Concept')
+            ) }}
+        {% endfor %}
+
+        {# And add some blank ones, for adding more concept #}
+        {# Though we do not go overboard, because users should constrain themselves #}
+        {% for _unused in range(2) %}
+            {{ form.select(
+                    'new_concept[]',
+                    options=concept_options,
+                    selected=default_option_value,
+                    label=_('Concept')
+            ) }}
+        {% endfor %}
+
+        {# TODO: Provide some protection against double-submitting #}
+        {# TODO: Give user feedback about the form being submitted #}
+        <input class="btn btn-primary" type="submit" value="{% trans %}Save changes{% endtrans %}"/>
+    </form>
+
+    {# TODO: Add some spacing so no one clicks cancel by mistake #}
+    <p>
+        {% link_for _('Cancel'), named_route='dataontosearch_tagger.show', dataset_id=dataset.name %}
+    </p>
+{% endblock %}
+
+{% block secondary_content %}
+    {# TODO: Style the secondary content #}
+    <h2>{% trans %}About the dataset{% endtrans %}</h2>
+    <dl>
+        <dt>{% trans %}Title{% endtrans %}</dt>
+        <dd>{{ dataset.title }}</dd>
+
+        {% if dataset.organization %}
+            <dt>{% trans %}Publisher{% endtrans %}</dt>
+            <dd>{{ dataset.organization.title }}</dd>
+        {% endif %}
+
+        <dt>{% trans %}CKAN Tags{% endtrans %}</dt>
+        <dd><ul>
+            {% for tag in dataset.tags %}
+                <li>{{ tag.display_name }}</li>
+            {% endfor %}
+        </ul></dd>
+    </dl>
+
+    {% if dataset.url %}
+        <p>
+            <a
+                    target="_blank"
+                    href="{{ dataset.url }}"
+            >
+                {% trans %}External website{% endtrans %}
+            </a>
+        </p>
+    {% endif %}
+
+    <p>
+        <a
+                target="_blank"
+                href="{% url_for 'dataset_read', id=dataset.name %}"
+        >
+            {% trans %}View in CKAN{% endtrans %}
+        </a>
+    </p>
+
+    <h3>{% trans %}Description{% endtrans %}</h3>
+    <p>
+        {{ dataset.notes }}
+    </p>
+{% endblock %}
