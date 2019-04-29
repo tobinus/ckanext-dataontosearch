@@ -2,15 +2,9 @@
    these badges work. The necessary Travis and Coverage config files have been
    generated for you.
 
-.. image:: https://travis-ci.org/tobinus/ckanext-dataontosearch.svg?branch=master
-    :target: https://travis-ci.org/tobinus/ckanext-dataontosearch
-
-.. image:: https://coveralls.io/repos/tobinus/ckanext-dataontosearch/badge.svg
-  :target: https://coveralls.io/r/tobinus/ckanext-dataontosearch
-
-.. image:: https://pypip.in/download/ckanext-dataontosearch/badge.svg
-    :target: https://pypi.python.org/pypi//ckanext-dataontosearch/
-    :alt: Downloads
+.. image:: http://unmaintained.tech/badge.svg
+    :target: http://unmaintained.tech/
+    :alt: No Maintenance Intended
 
 .. image:: https://pypip.in/version/ckanext-dataontosearch/badge.svg
     :target: https://pypi.python.org/pypi/ckanext-dataontosearch/
@@ -41,6 +35,15 @@ There are two separate plugins provided with this extension. ``dataontosearch_ta
 The extension adds a link you can follow when editing datasets. From there, you can change what concepts are connected to what datasets.
 
 The extension also adds a link to the alternative search method. Following it lets you search using DataOntoSearch.
+
+.. IMPORTANT::
+   This extension does not work by itself. It must be paired with a separately
+   deployed version of DataOntoSearch.
+
+.. ATTENTION::
+   Both this and DataOntoSearch should be considered experimental. The majority
+   of the work is done by master students who are not affiliated with the
+   project after their involvement ends.
 
 
 ------------
@@ -133,9 +136,41 @@ do::
     pip install -r dev-requirements.txt
 
 
+-----------
+Future Work
+-----------
+
+There are plenty of things that should be improved. Here are some of them:
+
+- Integrate concept viewing/editing with the dataset type of view, so the tabs
+  don't disappear once you click on "Concepts".
+- Some styling improvements can be done to make it look more appealing and be
+  easier to use.
+- Give feedback to the user when they save concept changes successfully.
+- Use progress indicator of some kind when the user submits concept changes, and
+  stop them from submitting more than once.
+- Give the user an idea of how the concepts relate to one another in a hierarchy,
+  instead of just a flat list. They should only use the most relevant, specific
+  concepts, and not try to fit many "similar" concepts, like you would with tags
+  or search words.
+- Give the user more context for each concept. There exist alternate labels that
+  sometimes indicate what other areas that concept is covering, and some even
+  have text that explain and show how to apply that concept. This would require
+  changes to the dataset_tagger API in DataOntoSearch to make the information
+  available to ckanext-dataontosearch.
+- Separate the two different plugins into two different Python files, per the
+  CKAN recommendations (to avoid problems with files loading out of order).
+- Add translations.
+
+There are also some TODO notes in the source code.
+
+
 -----------------
 Running the Tests
 -----------------
+
+.. NOTE::
+   No tests have been written for this project yet.
 
 To run the tests, do::
 
@@ -150,6 +185,11 @@ coverage installed in your virtualenv (``pip install coverage``) then run::
 -------------------------------------------------
 Releasing a New Version of ckanext-dataontosearch
 -------------------------------------------------
+
+.. NOTE::
+   Publishing on PyPi under the same name (ckanext-dataontosearch) is only
+   possible if you receive rights from one who already has access. You should be
+   able to make contact through an author's GitHub user.
 
 ckanext-dataontosearch is availabe on PyPI as https://pypi.python.org/pypi/ckanext-dataontosearch.
 To publish a new version to PyPI follow these steps:
