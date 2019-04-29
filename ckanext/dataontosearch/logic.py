@@ -260,7 +260,6 @@ def dataontosearch_dataset_search(context, data_dict):
     data = r.json()
 
     results = data[u'results']
-    count = len(results)
     query_concepts = data[u'concepts']
 
     processed_results = []
@@ -307,7 +306,7 @@ def dataontosearch_dataset_search(context, data_dict):
         processed_results.append(dataset_info)
 
     return {
-        u'count': count,
+        u'count': len(processed_results),
         u'results': processed_results,
         u'concepts': query_concepts,
         # Include dummy data for keys present in package_search
