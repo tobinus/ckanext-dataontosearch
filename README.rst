@@ -50,7 +50,7 @@ The extension also adds a link to the alternative search method. Following it le
 Requirements
 ------------
 
-This plugin was developed for CKAN version 2.8. We have not checked what other versions it works with.
+This plugin was developed for CKAN version 2.8. We have not checked what other versions it works with, but it does use features introduced in version 2.7.
 
 
 ------------
