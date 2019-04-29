@@ -23,7 +23,7 @@ class DataOntoSearch_TaggingPlugin(
     # IConfigurer
 
     def update_config(self, config_):
-        toolkit.add_template_directory(config_, u'templates')
+        toolkit.add_template_directory(config_, u'templates-tagger')
         toolkit.add_public_directory(config_, u'public')
         toolkit.add_resource(u'fanstatic', u'dataontosearch')
 
@@ -79,7 +79,7 @@ class DataOntoSearch_SearchingPlugin(plugins.SingletonPlugin):
     # IConfigurer
 
     def update_config(self, config_):
-        toolkit.add_template_directory(config_, u'templates')
+        toolkit.add_template_directory(config_, u'templates-search')
         toolkit.add_public_directory(config_, u'public')
         toolkit.add_resource(u'fanstatic', u'dataontosearch')
 
