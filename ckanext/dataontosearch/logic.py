@@ -270,7 +270,7 @@ def dataontosearch_dataset_search(context, data_dict):
 
         # Fetch information about this dataset
         try:
-            dataset_info = toolkit.get_action(u'package_show')(context, {
+            dataset_info = toolkit.get_action(u'package_show')(None, {
                 u'id': dataset_id,
             })
         except toolkit.ObjectNotFound:
