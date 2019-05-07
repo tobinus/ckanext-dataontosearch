@@ -88,7 +88,7 @@
                     target="_blank"
                     href="{{ dataset.url }}"
             >
-                {% trans %}External website{% endtrans %}
+                {% trans %}Original dataset source{% endtrans %}
             </a>
         </p>
     {% endif %}
@@ -98,7 +98,7 @@
                 target="_blank"
                 href="{% url_for 'dataset_read', id=dataset.name %}"
         >
-            {% trans %}View in CKAN{% endtrans %}
+            {% trans %}Open in CKAN{% endtrans %}
         </a>
     </p>
 
